@@ -73,7 +73,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~Another security flaw is using global password on server when prompted for joining domain with each cloned VM. 
 
 
-                                                        Future Improvements
+                                                     Future Improvements
 
 ~For cloned VMs with same password for each account: this can be mitigated when Service desk team updates password for customer. This is also going to be handled and discussed further in ad-user-onboarding repo. I will also update the script here to dynamically ask me what password to set user so, password will be changed as soon as start working internally on VM.
 
@@ -87,7 +87,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
   
   ~Can also transition to Azure Virtual Desktop or AWS which can still be cost efficient and limiting RAM resources which many hybrid or cloud based companies are moving too.
 
-                                                            Screenshots
+                                                         Screenshots
 
 ~Golden Image Memory Settings which is replicated for each VM
 
