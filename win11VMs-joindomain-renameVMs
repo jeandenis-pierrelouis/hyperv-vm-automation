@@ -1,0 +1,70 @@
+# ---------- Win11 Image Copying ----------
+$ParentVHDX = "C:\Users\JDPL\Documents\Projects\Low Disk Space PS\VHDX\Windows 11 dev environment.vhdx"
+
+# ---------- Location of VMs & VHDX once created ----------
+$VMLoc  = "D:\Projects\Low Disk Project\VMs"
+$VHDLoc = "D:\Projects\Low Disk Project\VHDX"
+$SwitchName = "VM_VMCommunication"
+
+# ---------- VMs to create ----------
+$VmCount = 10
+
+# ---------- CREATE DIFFERENCING DISKS ----------
+for ($i = 1; $i -le $VmCount; $i++) {
+    $ChildVhd = Join-Path $VHDLoc ("Win11{0}.vhdx" -f $i)
+
+    New-VHD -Path $ChildVhd -ParentPath $ParentVHDX -Differencing | Out-Null
+    Write-Host "Differencing Disk Created: $ChildVhd"
+}
+
+# ---------- CREATE VMs ----------
+for ($i = 1; $i -le $VmCount; $i++) {
+    $VMName  = "Win11{0}" -f $i
+    $ChildVhd = Join-Path $VHDLoc ("Win11{0}.vhdx" -f $i)
+    $VmPath   = Join-Path $VMLoc  $VMName
+
+    New-VM -Name $VMName `
+           -MemoryStartupBytes 2GB `
+           -Generation 2 `
+           -VHDPath $ChildVhd `
+           -Path $VmPath `
+           -SwitchName $SwitchName | Out-Null #Out-Null is used to throw away return to keep script clean. This is used mostly when want command to be successful and do not want this to be stored or shown
+
+    Set-VMProcessor -VMName $VMName -Count 2
+    Write-Host "Created VM: $VMName with differencing disk $ChildVhd"
+}
+
+# ---------- RENAME & JOIN DOMAIN (1 VM Active, Sequential) ----------
+$DomainName = "PSLab.local"
+$DnsServer = "192.168.100.10"
+$DomainCred = Get-Credential "PSLab\Administrator" -Message "Domain Admin"
+$LocalCred  = Get-Credential "WORKGROUP\User" -Message "Local Admin"
+
+for ($i = 1; $i -le $VmCount; $i++) {
+    $VMName  = "Win11$i"
+    $NewName = "LDVM-$i"
+
+    Write-Host "[$i/$VmCount] Starting $VMName → $NewName"
+
+    # Stop if running
+    Stop-VM -Name $VMName -Force -TurnOff -ErrorAction SilentlyContinue
+    Start-Sleep 5
+
+    Start-VM -Name $VMName
+    Start-Sleep 120  # Boot
+
+    Invoke-Command -VMName $VMName -Credential $LocalCred -ScriptBlock {
+        param($NewCompName, $Domain, $DomCred, $DnsIP)
+        $nic = Get-NetAdapter | Where-Object Status -eq "Up" | Select-Object -First 1
+        Set-DnsClientServerAddress -InterfaceIndex $nic.InterfaceIndex -ServerAddresses @($DnsIP)
+        ipconfig /flushdns
+        Add-Computer -DomainName $Domain -Credential $DomCred -NewName $NewCompName -Force -Restart
+    } -ArgumentList $NewName, $DomainName, $DomainCred, $DnsServer
+
+    Start-Sleep 180  # Reboot complete
+    Stop-VM -Name $VMName -Force -TurnOff  # OFF before next VM
+    Write-Host "✓ $NewName joined + OFF"
+    Write-Host ""
+}
+
+Write-Host "Complete! All VMs processed sequentially."
