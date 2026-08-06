@@ -1,10 +1,10 @@
-                                                             ##Overview
+                                                  ##Overview
 
 
 This project uses PowerShell to automate the creation of multiple Hyper-V virtual machines for repeatable lab and testing environments with the mindset of preparing VMs for a small business or startup ( also known as clients ) for their customers ( also known as end users ). It was built to reduce manual setup and work within limited local system resources.
 
 
-                                                      ##Problem It Solves 
+##Problem It Solves 
 
 ~Reduces the amount of manual creation of VMs.
 
@@ -15,14 +15,14 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~Uniformity of VMs based on clients request.
 
 
-                                                      ##Why This Project Exists
+##Why This Project Exists
 
 ~Many startup companies do not know where to start when it comes to the IT side of things and from research they can see that price can grow exponentially. The dream is there and the niche will be profitable but no tools to attract customers. With this project, will have enough resources to gain some traction and conduct meetings with potential investors in scaling the business. 
 
 ~Currently on local machine with 16 GBs of RAM and with browser open, can only run 3 VMs at a time ( this is including the server created which can see more information about in Windows-Server_Active-Directory-Environments repo).
 
 
-                                                      ##Features
+##Features
 
 ~Prepared a golden image on windows 11 OS to copy from ( baseline of how VMs for customers should be structured unless otherwise noted from clients )
 
@@ -35,7 +35,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~To limit strain on local machine, golden image only using 2 GB of RAM
 
 
-                                                      ##Requirements
+##Requirements
 
 ~Hyper-V enabled which is standard on windows 10 ( if on windows 11 will need to go to " Turn Windows Features On or Off " to enable hyper-v )
 
@@ -46,7 +46,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~Golden Image ( will need to update location of golden image in " win11VMs-renameVMs-joindomain " script )
 
 
-                                                      ##How to Use It
+##How to Use It
 
 ***Steps provided will need to be tweaked in script choosing own server created on Hyper-V, admin credentials on server, static ip address of server, location of storing VMs and VDHX on local machine, and ensuring following switch manager setup as well as memory settings to match output***
 
@@ -55,7 +55,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~On PowerShell as admin > run script and let the automation occur
 
 
-                                                      ##What I Learned
+##What I Learned
 
 ~When I initially started this project, the focus was limiting the amount of cost from a small business prospective or even startup. So, utilizing local machine with limited RAM in creating multiple VMs which would turn on > complete configuration then turn off to allow the next VM to be created. This is the base and once start discussing further with client, can determine if should go strictly cloud or buy a physical server or higher ram workstation to run more VMs at once.
 
@@ -64,7 +64,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~I learned about simplicity is key in speeding time of creations when need multiple VMs in one sitting. 
 
 
-                                                  ##Limitations or Known Issues 
+##Limitations or Known Issues 
 
 ~There is only one golden image which cloned VMs follow same user password which is a huge security risk. 
 
@@ -73,7 +73,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
 ~Another security flaw is using global password on server when prompted for joining domain with each cloned VM. 
 
 
-                                                     ##Future Improvements
+##Future Improvements
 
 ~For cloned VMs with same password for each account: this can be mitigated when Service desk team updates password for customer. This is also going to be handled and discussed further in ad-user-onboarding repo. I will also update the script here to dynamically ask me what password to set user so, password will be changed as soon as start working internally on VM.
 
@@ -87,7 +87,7 @@ This project uses PowerShell to automate the creation of multiple Hyper-V virtua
   
   ~Can also transition to Azure Virtual Desktop or AWS which can still be cost efficient and limiting RAM resources which many hybrid or cloud based companies are moving too.
 
-                                                         ##Screenshots
+##Screenshots
 
 ~Golden Image Memory Settings which is replicated for each VM
 
